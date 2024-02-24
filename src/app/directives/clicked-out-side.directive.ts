@@ -7,7 +7,6 @@ import { Directive, ElementRef, Output, EventEmitter, HostListener } from '@angu
 export class ClickedOutsideDirective {
 
   constructor(private el: ElementRef) {
-    console.log("red")
   }
 
   @Output() public clickedOutside = new EventEmitter();

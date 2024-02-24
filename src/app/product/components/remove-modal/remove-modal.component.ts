@@ -1,5 +1,6 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ClickedOutsideDirective } from '../../../directives/clicked-out-side.directive';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-remove-modal',
@@ -8,27 +9,40 @@ import { ClickedOutsideDirective } from '../../../directives/clicked-out-side.di
   templateUrl: './remove-modal.component.html',
   styleUrl: './remove-modal.component.css'
 })
-export class RemoveModalComponent {
+export class RemoveModalComponent implements OnInit, OnDestroy {
   @ViewChild('myModal') modal!: ElementRef;
-  @ViewChild('closeModal') span!: ElementRef;
+  @Input() message!: String;
+  closeSubject = new Subject<boolean>();
+  confirmSubject = new Subject<boolean>();
 
-  // Get the button that
-  // When the user clicks the button, open the modal 
-  open() {
-    this.modal.nativeElement.classList.remove("hidden");
+  ngOnInit(): void {
+    console.log('Modal init');
   }
-
-  // When the user clicks on <span> (x), close the modal
-  close() {
-    this.modal.nativeElement.classList.add('hidden');
-  }
-
-  // When the user clicks anywhere outside of the modal, close it
-
+  // clicks anywhere outside of the modal to close
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    if (event.target == this.modal.nativeElement) {
-      this.modal.nativeElement.classList.add("hidden");
+    if (this.modal) {
+      if (event.target == this.modal.nativeElement) {
+        this.deleteItself()
+
+      }
     }
   }
+
+  get closeObservable() {
+    return this.closeSubject.asObservable();
+  }
+  get confirmObservable() {
+    return this.confirmSubject.asObservable();
+  }
+  deleteItself() {
+    this.closeSubject.next(true);
+  }
+  confirm() {
+    this.confirmSubject.next(true);
+  }
+  ngOnDestroy(): void {
+    console.log(' Modal destroyed');
+  }
+
 }

@@ -1,10 +1,16 @@
 <!-- The Modal -->
-<div id="myModal" #myModal class="modal hidden">
+<div id="myModal" #myModal class="modal">
 
     <!-- Modal content -->
     <div class="modal-content">
-        <span class="close" #closeModal (click)="close()">&times;</span>
-        <p>Some text in the Modal..</p>
+        <div class="card card--remove">
+            <div class="card__body card__body--remove">{{message}}</div>
+            <div class="card__footer  card__footer--remove">
+                <button type="button" class="btn btn--w50 btn--right btn--default"
+                    (click)="deleteItself()">Cancelar</button>
+                <button type="submit" class="btn btn--w50" (click)="confirm()">Confirmar</button>
+            </div>
+        </div>
     </div>
 
 </div>

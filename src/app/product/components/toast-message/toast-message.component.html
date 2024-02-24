@@ -1,4 +1,4 @@
-<div class="toast" #toast>
+<div class="toast toast--active">
 
     <div class="toast__content">
         <i class="fas fa-solid fa-check toast--check"></i>
@@ -8,6 +8,6 @@
             <span class="text text-2">{{message}}</span><!-- Producto Registrado con Éxito! -->
         </div>
     </div>
-    <i class="fa-solid fa-xmark toast__close toast__close--hover " (click)="removeSuccessMessage()"></i>
-    <div #progress class="toast__progress toast__progress--active"></div>
+    <i class="fa-solid fa-xmark toast__close toast__close--hover " (click)="deleteItself()"></i>
+    <div class="toast__progress toast__progress--active toast--active"></div>
 </div>

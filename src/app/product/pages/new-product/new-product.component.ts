@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
 import { Router, RouterLink } from '@angular/router';
@@ -18,7 +18,7 @@ export type IForm<T> = {
 @Component({
   selector: 'app-new-product',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule, RouterLink, ClickedOutsideDirective, ToastMessageComponent],
+  imports: [CommonModule, HttpClientModule, ReactiveFormsModule, RouterLink, ClickedOutsideDirective],
   templateUrl: './new-product.component.html',
   styleUrl: './new-product.component.css'
 })
@@ -26,24 +26,20 @@ export default class NewProductComponent implements AfterViewInit {
   productForm = this.initForm()
   duplicateError = false;
   @ViewChild('InputId') InputId!: ElementRef;
-  @ViewChild(ToastMessageComponent)
-  private toastMessageComponent!: ToastMessageComponent;
   constructor(public productService: ProductService, private fb: FormBuilder,
-    private router: Router, private gnrlService: GeneralService, private datePipe: DatePipe, private formValidateService: FormValidateService) {
-    this.setDateRevision()
+    private router: Router, private gnrlService: GeneralService, private datePipe: DatePipe, private formValidateService: FormValidateService, private vcr: ViewContainerRef) {
+    this.setDateRevision();
 
   }
   ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
 
     this.InputId.nativeElement.focus();
   }
   //init form
   initForm() {
-    let nowDate = new Date()
+    let nowDate = new Date();
     nowDate.setDate(nowDate.getDate());
-    let date: any = this.datePipe.transform(nowDate, 'yyyy-MM-dd')
+    let date: any = this.datePipe.transform(nowDate, 'yyyy-MM-dd');
     return this.fb.group({
       id: ['', {
         validators: [this.formValidateService.idValidator, checkDuplicate(this.duplicateError), Validators.minLength(3), Validators.maxLength(10)]
@@ -65,33 +61,42 @@ export default class NewProductComponent implements AfterViewInit {
       }]
     })
   }
-
+  /* set data revision whit 1 year more */
   setDateRevision() {
-    this.date_revision.setValue(this.gnrlService.dateToText(this.gnrlService.setDateRevision(this.date_release.value)))
+    this.date_revision.setValue(this.gnrlService.dateToText(this.gnrlService.setDateRevision(this.date_release.value)));
   }
   /* save data */
   async saveRecord() {
     try {
-
       this.formValidateService.validityForm(this.productForm)
       if (this.productForm.valid) {
         await firstValueFrom(this.productService.saveProduct(this.productForm.value));
-        this.toastMessageComponent.showSuccessMessage();
+        this.showToastMessage();
         this.resetForm();
       } else {
         this.formValidateService.validateAllFormFields(this.productForm);
-        this.checkDuplicate()
+        this.checkDuplicate();
       }
     } catch (error: any) {
-      console.error(error)
+      console.error(error);
     }
   }
+  /* confirm message */
+  showToastMessage() {
+    const toastComponent = this.vcr.createComponent(ToastMessageComponent);
+    toastComponent.instance.title = "Guardado!";
+    toastComponent.instance.message = "Producto Registrado Satisfactoriamente!";
+    toastComponent.instance.closeObservable.subscribe((remove) => {
+      if (remove) toastComponent.destroy();
+    })
+  }
+  /* reset form values */
   resetForm() {
     this.productForm = this.initForm()
     this.setDateRevision()
     this.InputId.nativeElement.focus();
   }
-  /* validate id duplicate */
+  /* check id duplicate */
   async checkDuplicate() {
     if (this.id.value) {
       this.duplicateError = await firstValueFrom(this.productService.getProductsVerification(this.id.value));

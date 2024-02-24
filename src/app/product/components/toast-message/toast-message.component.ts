@@ -1,4 +1,5 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-toast-message',
@@ -7,39 +8,29 @@ import { Component, ElementRef, Input, ViewChild } from '@angular/core';
   templateUrl: './toast-message.component.html',
   styleUrl: './toast-message.component.css'
 })
-export class ToastMessageComponent {
+export class ToastMessageComponent implements OnInit, OnDestroy {
   @Input() title!: string;
   @Input() message!: string;
   @Input() type: 'success' | 'danger' = 'success';
-  @ViewChild('toast') toast!: ElementRef;
-  @ViewChild('progress') progress!: ElementRef;
-
-  paymentTime!: any;
-  progressTime!: any;
-  showSuccessMessage() {
-    if (!this.toast.nativeElement.classList.contains("toast--active")) {
-      this.toast.nativeElement.classList.add("toast--active");
-      this.progress.nativeElement.classList.add("toast--active");
-
-      this.paymentTime = setTimeout(() => {
-        this.toast.nativeElement.classList.remove("toast--active");
-      }, 5000); //1s = 1000 milliseconds
-
-      this.progressTime = setTimeout(() => {
-        this.progress.nativeElement.classList.remove("toast--active");
-      }, 5300);
-    }
+  closeSubject = new Subject<boolean>();
+  closedTime!: any;
+  ngOnInit(): void {
+    this.closedTime = setTimeout(() => {
+      this.deleteItself()
+      clearTimeout(this.closedTime);
+    }, 5000);
+    console.log('Modal init');
   }
-  removeSuccessMessage() {
-    if (this.toast.nativeElement.classList.contains("toast--active")) {
-      this.toast.nativeElement.classList.remove("toast--active");
 
-      setTimeout(() => {
-        this.progress.nativeElement.classList.remove("toast--active");
-      }, 300);
+  get closeObservable() {
+    return this.closeSubject.asObservable();
+  }
+  deleteItself() {
+    this.closeSubject.next(true);
+  }
+  ngOnDestroy(): void {
 
-      clearTimeout(this.paymentTime);
-      clearTimeout(this.progressTime);
-    }
+
+    console.log(' Modal destroyed');
   }
 }

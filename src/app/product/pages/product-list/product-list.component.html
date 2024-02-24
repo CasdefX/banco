@@ -1,7 +1,8 @@
 <section class="products">
     <div class="filter__container">
         <input type="text" class="input" [formControl]="searchText" placeholder="Search Products..." />
-        <a class="btn" routerLink="/product/new" routerLinkActive="active" ariaCurrentWhenActive="page">Agregar</a>
+        <button class="btn" routerLink="/product/new" routerLinkActive="active"
+            ariaCurrentWhenActive="page">Agregar</button>
     </div>
     <div class="table__container">
         <div class="table__responsive">
@@ -37,7 +38,7 @@
                                 <div id="actions" #menu *ngIf="item.isMenuOpen" class="dropdown__content">
                                     <a href="javascript:void(0)" [routerLink]="['../edit', item.id]"><i
                                             class="fa-solid fa-pencil"></i>Editar</a>
-                                    <a href="javascript:void(0)" (click)="openModal()"><i
+                                    <a href="javascript:void(0)" (click)="openModal(item)"><i
                                             class="fa-solid fa-trash-can"></i>Eliminar</a>
                                 </div>
                             </div>
@@ -69,5 +70,4 @@
             </div>
         </div>
     </div>
-    <app-remove-modal />
 </section>

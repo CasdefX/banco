@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, ValidationErrors, FormControl } from '@angular/forms';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -15,19 +15,17 @@ import { IProduct } from '../../../core/interfaces/product';
 @Component({
   selector: 'app-edit-product',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, ReactiveFormsModule, RouterLink, ClickedOutsideDirective, ToastMessageComponent],
+  imports: [CommonModule, HttpClientModule, ReactiveFormsModule, RouterLink, ClickedOutsideDirective],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.css'
 })
 export default class EditProductComponent implements AfterViewInit {
-  productForm = this.initForm()
+  productForm = this.initForm();
   duplicateError = false;
   @ViewChild('InputId') InputId!: ElementRef;
-  @ViewChild(ToastMessageComponent)
-  private toastMessageComponent!: ToastMessageComponent;
   constructor(public productService: ProductService, private fb: FormBuilder,
-    private router: Router, private gnrlService: GeneralService, private datePipe: DatePipe, private formValidateService: FormValidateService, private route: ActivatedRoute) {
-    this.setDataToForm()
+    private router: Router, private gnrlService: GeneralService, private datePipe: DatePipe, private formValidateService: FormValidateService, private route: ActivatedRoute, private vcr: ViewContainerRef) {
+    this.setDataToForm();
 
 
   }
@@ -70,26 +68,33 @@ export default class EditProductComponent implements AfterViewInit {
   }
   //set date_revision 1 year more
   setDateRevision() {
-    this.date_revision.setValue(this.gnrlService.dateToText(this.gnrlService.setDateRevision(this.date_release.value)))
+    this.date_revision.setValue(this.gnrlService.dateToText(this.gnrlService.setDateRevision(this.date_release.value)));
   }
   /* update data */
   async updateRecord() {
     try {
-
-      this.formValidateService.validityForm(this.productForm)
+      this.formValidateService.validityForm(this.productForm);
       if (this.productForm.valid) {
         await firstValueFrom(this.productService.updateProduct(this.productForm.getRawValue()));
-        this.toastMessageComponent.showSuccessMessage()
-        this.setDataToForm()
-
+        this.showToastMessage();
+        this.setDataToForm();
       } else {
-
         this.formValidateService.validateAllFormFields(this.productForm);
       }
     } catch (error: any) {
       console.error(error)
     }
   }
+  /* confirm message */
+  showToastMessage() {
+    const toastComponent = this.vcr.createComponent(ToastMessageComponent);
+    toastComponent.instance.title = "Guardado!";
+    toastComponent.instance.message = "Producto Actualizado Satisfactoriamente!";
+    toastComponent.instance.closeObservable.subscribe((remove) => {
+      if (remove) toastComponent.destroy();
+    })
+  }
+  /* reset from values */
   resetForm() {
     this.productForm = this.initForm()
     this.setDateRevision()
