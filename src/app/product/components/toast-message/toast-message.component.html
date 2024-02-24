@@ -1,0 +1,13 @@
+<div class="toast" #toast>
+
+    <div class="toast__content">
+        <i class="fas fa-solid fa-check toast--check"></i>
+
+        <div class="toast__message">
+            <span class="toast__text toast__text-1">{{title}}</span>
+            <span class="text text-2">{{message}}</span><!-- Producto Registrado con Éxito! -->
+        </div>
+    </div>
+    <i class="fa-solid fa-xmark toast__close toast__close--hover " (click)="removeSuccessMessage()"></i>
+    <div #progress class="toast__progress toast__progress--active"></div>
+</div>
