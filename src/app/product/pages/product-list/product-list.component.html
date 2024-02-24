@@ -1,1 +1,73 @@
-<p>product-list works!</p>
+<section class="products">
+    <div class="filter__container">
+        <input type="text" class="input" [formControl]="searchText" placeholder="Search Products..." />
+        <a class="btn" routerLink="/product/new" routerLinkActive="active" ariaCurrentWhenActive="page">Agregar</a>
+    </div>
+    <div class="table__container">
+        <div class="table__responsive">
+            <table class="table">
+                <thead class="table__header">
+                    <tr class="table__row-header">
+                        <th class="table__header-col text--center">Logo</th>
+                        <th class="table__header-col text--left">Nombre del Producto</th>
+                        <th class="table__header-col text--left">Descripción <span class="table__header-icon"><i
+                                    class="fa-solid fa-circle-info"></i></span></th>
+                        <th class="table__header-col text--left">Fecha de liberación <span class="table__header-icon"><i
+                                    class="fa-solid fa-circle-info"></i></span></th>
+                        <th class="table__header-col text--left">Fecha de restauración <span
+                                class="table__header-icon"><i class="fa-solid fa-circle-info"></i></span></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="table__body">
+                    @for (item of products |filter:this.searchText.value:page:selectedRows.value; track
+                    $index) {
+                    <tr class="table__body-row">
+                        <td class="table__body-col text--center" scope="row">
+                            <img class="img__product" [src]="item.logo" alt="image product" width="40" height="40">
+                        </td>
+                        <td class="table__body-col">{{item.name}}</td>
+                        <td class="table__body-col">{{item.description}}</td>
+                        <td class="table__body-col">{{item.date_release|date:'dd/MM/yyyy HH:mm': '-0'}}</td>
+                        <td class="table__body-col">{{item.date_revision|date:'dd/MM/yyyy HH:mm': '-0'}}</td>
+                        <td class="table__body-col">
+                            <div class="dropdown" (clickedOutside)="item.isMenuOpen = false">
+                                <button #actions (click)="openActionsMenu(item)" class="dropdown__btn"><i
+                                        class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div id="actions" #menu *ngIf="item.isMenuOpen" class="dropdown__content">
+                                    <a href="javascript:void(0)" [routerLink]="['../edit', item.id]"><i
+                                            class="fa-solid fa-pencil"></i>Editar</a>
+                                    <a href="javascript:void(0)" (click)="openModal()"><i
+                                            class="fa-solid fa-trash-can"></i>Eliminar</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    }@empty {lista vacía}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table__footer">
+            <div class="table__results">
+                <p>
+                    {{products.length}} resultados
+                </p>
+            </div>
+            <div class="table__pagination">
+                <button class="btn" (click)="preview()" [disabled]="page===0">preview</button>
+                <button class="btn" (click)="next()"
+                    [disabled]="(products |filter:this.searchText.value:page:selectedRows.value).length<selectedRows.value">next</button>
+            </div>
+            <div>
+                <select class="table__rows" name="table-rows" id="table-rows" [formControl]="selectedRows"
+                    (ngModelChange)="page=0">
+                    <option *ngFor="let item of rowsTable" [ngValue]="item">
+                        {{ item }}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <app-remove-modal />
+</section>
