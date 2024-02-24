@@ -1,1 +1,273 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./assets/css/toast.css";
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f4f6f9;
+}
+
+header {
+    background-color: white;
+    text-align: center;
+}
+
+.header__logo {
+    max-width: 150px;
+    padding: 30px 0 20px;
+    margin: 0 auto;
+}
+
+main {
+    padding: 5%;
+}
+
+.table__container {
+    background-color: white;
+    overflow-x: auto;
+    padding: 20px;
+
+}
+
+.table__responsive {
+    overflow-x: auto;
+
+}
+
+.filter__container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+}
+
+.input {
+    padding: 10px 15px;
+    border: 1px solid rgb(190, 190, 190);
+    border-radius: 5px;
+    margin: 5px 0;
+
+}
+
+.btn {
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: #3a4973;
+    font-weight: 700;
+    background-color: #f9de4b;
+    pointer-events: auto;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn:hover {
+    scale: 1.1;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table__header {
+    font-weight: 700;
+    background-color: #f4f6f9;
+}
+
+.table__header-col {
+    padding: 15px;
+}
+
+.table__header-icon {
+    padding-left: 10px;
+    color: rgb(158, 158, 158);
+}
+
+
+.table__body-col {
+    padding: 5px;
+    border-bottom: 1px solid rgb(158, 158, 158);
+}
+
+
+.table__footer {
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.table__rows {
+    padding: 5px 15px;
+    border: 2px solid rgb(190, 190, 190);
+    border-radius: 5px;
+    pointer-events: auto;
+    cursor: pointer;
+
+}
+
+.table__pagination {
+    display: flex;
+    gap: 20px;
+}
+
+.table__results {
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+.btn:disabled {
+    opacity: 50%;
+    pointer-events: none;
+}
+
+
+/* dropdown menu*/
+.dropdown__btn {
+    background: transparent;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown__btn:hover,
+.dropdown__btn:focus {
+    scale: 1.1;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown__content {
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    left: -150px;
+    top: -10px;
+}
+
+.dropdown__content a {
+    color: #3a4973;
+    padding: 7px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown__content a i.fa-pencil {
+    color: rgb(126, 160, 255);
+    padding-right: 10px;
+}
+
+.dropdown__content a i.fa-trash-can {
+    color: rgb(255, 126, 126);
+    padding-right: 10px;
+}
+
+.dropdown a:hover {
+    background-color: #ddd;
+}
+
+/* new product */
+.new__product-container {
+    display: grid;
+    place-content: center;
+    grid-template-columns: repeat(auto-fit, min(100%, 40rem));
+    place-items: start;
+    padding: 0 1rem;
+}
+
+.card {
+    background-color: white;
+    border-radius: 15px;
+    width: 100%;
+}
+
+.card__header {
+    text-align: center;
+    padding: 40px 0 20px;
+    border-bottom: 1px solid black;
+}
+
+.card__title {
+    font-size: 2rem;
+}
+
+.card__body {
+    padding: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.formControl {
+    display: flex;
+    flex-direction: column;
+}
+
+.card__footer {
+    padding: 20px 0 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.btn--big {
+    padding: 20px;
+}
+
+.btn--w50 {
+    width: 100px;
+}
+
+.btn--right {
+    place-self: end;
+}
+
+.btn--default {
+    background-color: #e8ebf2;
+}
+
+.form__error {
+    color: rgb(255, 126, 126);
+}
+
+.label__gray {
+    color: rgb(190, 190, 190);
+}
+
+.input--disabled {
+    background-color: #f6f6f6;
+    color: rgb(190, 190, 190);
+}
+
+.border__error {
+    border-color: rgb(255, 126, 126);
+}
+
+.success__message {
+    text-align: center;
+    color: rgb(126, 214, 255);
+    ;
+}
+
+@media (min-width:768px) {
+    .table__results {
+        width: auto;
+    }
+
+    .header__logo {
+        max-width: 200px;
+    }
+}
+
+@media (min-width:1200px) {}
