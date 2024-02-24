@@ -1,1 +1,62 @@
-<p>edit-product works!</p>
+<section class="new__product">
+    <div class="new__product-container">
+        <div class="card">
+
+            <form [formGroup]="productForm" autocomplete="off" (ngSubmit)="updateRecord()">
+                <div class="card__header">
+                    <h1 class="card__title">Formulario de Edición</h1>
+                </div>
+                <div class="card__body">
+                    <div class="formControl">
+                        <label for="id">ID</label>
+                        <input type="text" type="text" id="id" [formControl]="id" name="id" placeholder="ID" #InputId
+                            [ngClass]="{'border__error': msgError(productForm.controls['id'])}" class="input" required>
+                        <small class="form__error">{{msgError(productForm.controls['id'])}}</small>
+                    </div>
+                    <div class="formControl">
+                        <label for="name">Nombre</label>
+                        <input type="text" type="text" id="name" formControlName="name"
+                            [ngClass]="{'border__error': msgError(productForm.controls['name'])}" name="name"
+                            placeholder="nombre" class="input" required>
+                        <small class="form__error">{{msgError(productForm.controls['name'])}}</small>
+                    </div>
+                    <div class="formControl">
+                        <label for="description">Descripción</label>
+                        <input type="text" id="description" formControlName="description" name="description"
+                            [ngClass]="{'border__error': msgError(productForm.controls['description'])}"
+                            placeholder="Descripción" class="input" required>
+                        <small class="form__error">{{msgError(productForm.controls['description'])}}</small>
+                    </div>
+                    <div class="formControl">
+                        <label for="logo">Logo</label>
+                        <input type="text" id="logo" formControlName="logo" name="logo" placeholder="Logo" class="input"
+                            [ngClass]="{'border__error': msgError(productForm.controls['logo'])}" required>
+                        <small class="form__error">{{msgError(productForm.controls['logo'])}}</small>
+                    </div>
+                    <div class="formControl">
+                        <label for="date-release">Fecha liberación</label>
+                        <input type="date" id="date-release" formControlName="date_release" name="date-release"
+                            [ngClass]="{'border__error': msgError(productForm.controls['date_release'])}"
+                            placeholder="Fecha-liberación" class="input" required (ngModelChange)="setDateRevision()">
+                        <small class="form__error">{{msgError(productForm.controls['date_release'])}}</small>
+                    </div>
+                    <div class="formControl">
+                        <label for="date-revision" class="label__gray">fecha revisión</label>
+                        <input id="date-revision" formControlName="date_revision" name="date-revision"
+                            placeholder="fecha revisión" class="input input--disabled" required>
+                        <small class="form__error">{{msgError(productForm.controls['date_revision'])}}</small>
+                    </div>
+
+                </div>
+                <div class="card__footer">
+                    <button type="button" class="btn btn--w50 btn--right btn--default btn--big"
+                        (click)="setDataToForm()">Reiniciar</button>
+                    <button type="submit" class="btn btn--w50 btn--big">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- toast payment -->
+    <app-toast-message title="Guardado!" message="Producto Actualizado Satisfactoriamente!" />
+    <!-- end toast payment -->
+</section>
