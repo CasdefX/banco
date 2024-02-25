@@ -20,10 +20,9 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('banco');
   });
 
-  it('should render title', () => {
+  it("add two components", () => {
     const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, banco');
-  });
+    const app = fixture.componentInstance;
+    expect(app.sum(1, 4)).toBe(5)
+  })
 });

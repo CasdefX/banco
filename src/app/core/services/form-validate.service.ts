@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
-import { IProduct } from '../interfaces/product';
-import { ProductService } from './product.service';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
-
 @Injectable({
     providedIn: 'root'
 })
 export class FormValidateService {
 
-    constructor(private productService: ProductService, http: HttpClient) { }
+    constructor() { }
 
     resetForm(form: any) {
         form.reset();
@@ -25,6 +20,7 @@ export class FormValidateService {
 
             }
         );
+
     }
     validityForm(form: any) {
         Object.keys(form.controls).forEach(
@@ -33,6 +29,7 @@ export class FormValidateService {
             }
         );
     }
+    //permite tener el submit button activo y al hacer click verifica todos los campos requeridos
     validateAllFormFields(form: any) {
         if (form instanceof FormControl) {
             form.markAsTouched({ onlySelf: true });
@@ -68,7 +65,6 @@ export class FormValidateService {
     }
     //mostramos el error según las Validaciones de los formControl
     getMsgError(control: any) {
-        const name = this.getNameControl(control)
         const errors: any = {
             required: `Este campo es requerido!`,
             remote: `Por favor, corrija este campo.`,
@@ -106,26 +102,6 @@ export class FormValidateService {
     getKeys(setting: any) {
         return Object.keys(setting);
     }
-    //recuperamos el nombre del formControl
-    getNameControl(control: any) {
-        let group = <FormGroup>control.parent;
-        let name!: string;
-
-        if (!group) {
-            return '';
-        }
-        Object.keys(group.controls).forEach(key => {
-            let childControl = group.get(key);
-
-            if (childControl !== control) {
-                return;
-            }
-
-            name = key;
-        });
-
-        return name;
-    }
     //validación para el campo id
     idValidator(control: FormControl) {
         const error: ValidationErrors = { idSelectRequired: true };
@@ -147,15 +123,12 @@ export class FormValidateService {
             let month = now.getMonth() + 1
             if (now.getFullYear() > date[0]) {
                 throw new Error()
-                return
             }
             if (month > date[1]) {
                 throw new Error()
-                return
             } else
                 if (month >= date[1] && now.getDate() > date[2]) {
                     throw new Error()
-                    return
                 }
         } catch (e) {
             control.setErrors(error);

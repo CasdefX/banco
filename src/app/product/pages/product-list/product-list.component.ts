@@ -6,9 +6,9 @@ import { CommonModule } from '@angular/common';
 import { FilterPipe } from '../../../core/pipes/filter.pipe';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ClickedOutsideDirective } from '../../../directives/clicked-out-side.directive';
+import { ClickedOutsideDirective } from '../../../core/directives/clicked-out-side.directive';
 import { RemoveModalComponent } from '../../components/remove-modal/remove-modal.component';
-import { timer } from 'rxjs';
+import { EMPTY, catchError, timer } from 'rxjs';
 import { ToastMessageComponent } from '../../components/toast-message/toast-message.component';
 
 @Component({
@@ -28,11 +28,12 @@ export class ProductListComponent {
   searchText = new FormControl();
   /* rows table */
   rowsTable: number[] = [5, 10, 20];
-  page: number = 0;
+  minRows: number = 0;
   initRowsValue: number = 5;
   selectedRows = new FormControl();
-
-  productActionsMenuActive!: IProduct
+  /* control response  error */
+  errorMessage: any;
+  productActionsMenuActive!: IProduct;
   constructor(private productService: ProductService, private vcr: ViewContainerRef) {
 
   }
@@ -44,22 +45,25 @@ export class ProductListComponent {
 
   }
   getProductList() {
-    this.productService.getProductsList().subscribe((response: any) => {
-      this.products = response;
+    this.productService.getProductsList().pipe(catchError(err => { this.errorMessage = err.statusText; return EMPTY; })).subscribe({
+      next: (response: any) => {
+        this.products = response;
+      },
+      complete: () => {
+        console.log("finished")
+      }
     })
   }
   next() {
-    this.page += this.selectedRows.value || this.initRowsValue;
+    this.minRows += this.selectedRows.value || this.initRowsValue;
   }
 
   preview() {
-    this.page -= this.selectedRows.value || this.initRowsValue;
+    this.minRows -= this.selectedRows.value || this.initRowsValue;
+
+    this.minRows = this.minRows < 0 ? 0 : this.minRows;
   }
 
-  openActionsMenu(product: IProduct) {
-    this.productActionsMenuActive = product
-    product.isMenuOpen = !product.isMenuOpen;
-  }
 
   openModal(product: IProduct) {
     const removeModalComponent = this.vcr.createComponent(RemoveModalComponent);
@@ -88,7 +92,5 @@ export class ProductListComponent {
       if (remove) toastComponent.destroy();
     })
   }
-  handleCloseModal() { }
-  handleConfirmModal() { }
   //getters
 }

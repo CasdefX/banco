@@ -5,7 +5,7 @@ import { Directive, ElementRef, Output, EventEmitter, HostListener } from '@angu
   standalone: true
 })
 export class ClickedOutsideDirective {
-
+  clickedInside = true;
   constructor(private el: ElementRef) {
   }
 
@@ -13,8 +13,8 @@ export class ClickedOutsideDirective {
 
   @HostListener('document:click', ['$event.target'])
   public onClick(target: any) {
-    const clickedInside = this.el.nativeElement.contains(target);
-    if (!clickedInside) {
+    this.clickedInside = this.el.nativeElement.contains(target);
+    if (!this.clickedInside) {
       this.clickedOutside.emit(target);
     }
   }

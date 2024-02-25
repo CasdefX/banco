@@ -10,42 +10,42 @@
                     <div class="formControl">
                         <label for="id">ID</label>
                         <input type="text" type="text" id="id" formControlName="id" name="id" placeholder="ID" #InputId
-                            (ngModelChange)="checkDuplicate()"
-                            [ngClass]="{'border__error': msgError(productForm.controls['id'])}" class="input" required>
-                        <small class="form__error">{{msgError(productForm.controls['id'])}}</small>
+                            (ngModelChange)="checkDuplicateID()" [ngClass]="{'border__error': msgError(id)}"
+                            class="input" required>
+                        <small class="form__error">{{msgError(id)}}</small>
                     </div>
                     <div class="formControl">
                         <label for="name">Nombre</label>
                         <input type="text" type="text" id="name" formControlName="name"
-                            [ngClass]="{'border__error': msgError(productForm.controls['name'])}" name="name"
-                            placeholder="nombre" class="input" required>
-                        <small class="form__error">{{msgError(productForm.controls['name'])}}</small>
+                            [ngClass]="{'border__error': msgError(name)}" name="name" placeholder="nombre" class="input"
+                            required>
+                        <small class="form__error">{{msgError(name)}}</small>
                     </div>
                     <div class="formControl">
                         <label for="description">Descripción</label>
                         <input type="text" id="description" formControlName="description" name="description"
-                            [ngClass]="{'border__error': msgError(productForm.controls['description'])}"
-                            placeholder="Descripción" class="input" required>
-                        <small class="form__error">{{msgError(productForm.controls['description'])}}</small>
+                            [ngClass]="{'border__error': msgError(description)}" placeholder="Descripción" class="input"
+                            required>
+                        <small class="form__error">{{msgError(description)}}</small>
                     </div>
                     <div class="formControl">
                         <label for="logo">Logo</label>
                         <input type="text" id="logo" formControlName="logo" name="logo" placeholder="Logo" class="input"
-                            [ngClass]="{'border__error': msgError(productForm.controls['logo'])}" required>
-                        <small class="form__error">{{msgError(productForm.controls['logo'])}}</small>
+                            [ngClass]="{'border__error': msgError(logo)}" required>
+                        <small class="form__error">{{msgError(logo)}}</small>
                     </div>
                     <div class="formControl">
                         <label for="date-release">Fecha liberación</label>
                         <input type="date" id="date-release" formControlName="date_release" name="date-release"
-                            [ngClass]="{'border__error': msgError(productForm.controls['date_release'])}"
-                            placeholder="Fecha-liberación" class="input" required (ngModelChange)="setDateRevision()">
-                        <small class="form__error">{{msgError(productForm.controls['date_release'])}}</small>
+                            [ngClass]="{'border__error': msgError(date_release)}" placeholder="Fecha-liberación"
+                            class="input" required (ngModelChange)="setDateRevision()">
+                        <small class="form__error">{{msgError(date_release)}}</small>
                     </div>
                     <div class="formControl">
                         <label for="date-revision" class="label__gray">fecha revisión</label>
                         <input id="date-revision" formControlName="date_revision" name="date-revision"
                             placeholder="fecha revisión" class="input input--disabled" required>
-                        <small class="form__error">{{msgError(productForm.controls['date_revision'])}}</small>
+                        <small class="form__error">{{msgError(date_revision)}}</small>
                     </div>
 
                 </div>

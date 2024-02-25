@@ -19,7 +19,6 @@ export class ToastMessageComponent implements OnInit, OnDestroy {
       this.deleteItself()
       clearTimeout(this.closedTime);
     }, 5000);
-    console.log('Modal init');
   }
 
   get closeObservable() {
@@ -30,7 +29,5 @@ export class ToastMessageComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
 
-
-    console.log(' Modal destroyed');
   }
 }

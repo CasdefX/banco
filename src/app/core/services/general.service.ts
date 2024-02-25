@@ -8,22 +8,22 @@ export class GeneralService {
 
   constructor() { }
   dateToText = function (stringDate: string | Date) {
-    let date: any = new Date(stringDate);
-    var valor = (date.getMonth() + 1)
-    if (valor < 10) {
-      valor = "0" + valor
+    let date: any = stringDate
+    var month = (date.getMonth() + 1)
+    if (month < 10) {
+      month = "0" + month
     }
-    var valor2 = date.getDate()
-    if (valor2 < 10) {
-      valor2 = "0" + valor2
+    var day = date.getDate()
+    if (day < 10) {
+      day = "0" + day
     }
 
-    let dateText: any = valor2 + "/" + valor + "/" + date.getFullYear();
+    let dateText: any = day + "/" + month + "/" + date.getFullYear();
     return dateText
   }
-  setDateRevision(date_release: Date) {
-    const date = new Date(date_release);
-    date.setDate(date.getDate() + 1)
+  setDateRevision(date_release: any) {
+    const date = new Date(date_release.split("-")[0], parseInt(date_release.split("-")[1]) - 1, parseInt(date_release.split("-")[2]));
+    date.setDate(date.getDate())
     date.setFullYear(date.getFullYear() + 1)
     return date
 

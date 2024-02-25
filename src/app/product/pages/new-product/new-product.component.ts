@@ -1,12 +1,11 @@
 import { AfterContentInit, AfterViewInit, Component, ElementRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ClickedOutsideDirective } from '../../../directives/clicked-out-side.directive';
+import { ClickedOutsideDirective } from '../../../core/directives/clicked-out-side.directive';
 import { GeneralService } from '../../../core/services/general.service';
-import { firstValueFrom } from 'rxjs';
 import { FormValidateService } from '../../../core/services/form-validate.service';
 import { IProduct } from '../../../core/interfaces/product';
 import { ToastMessageComponent } from '../../components/toast-message/toast-message.component';
@@ -26,8 +25,7 @@ export default class NewProductComponent implements AfterViewInit {
   productForm = this.initForm()
   duplicateError = false;
   @ViewChild('InputId') InputId!: ElementRef;
-  constructor(public productService: ProductService, private fb: FormBuilder,
-    private router: Router, private gnrlService: GeneralService, private datePipe: DatePipe, private formValidateService: FormValidateService, private vcr: ViewContainerRef) {
+  constructor(public productService: ProductService, private fb: FormBuilder, private gnrlService: GeneralService, private datePipe: DatePipe, private formValidateService: FormValidateService, private vcr: ViewContainerRef) {
     this.setDateRevision();
 
   }
@@ -53,10 +51,10 @@ export default class NewProductComponent implements AfterViewInit {
       logo: ['', {
         validators: [Validators.required]
       }],
-      date_release: [this.datePipe.transform(nowDate, 'yyyy-MM-dd'), {
+      date_release: [date, {
         validators: [Validators.required, this.formValidateService.dateValidator]
       }],
-      date_revision: [{ value: '' }, {
+      date_revision: [{ value: '', disabled: true }, {
         validators: [Validators.required],
       }]
     })
@@ -70,12 +68,13 @@ export default class NewProductComponent implements AfterViewInit {
     try {
       this.formValidateService.validityForm(this.productForm)
       if (this.productForm.valid) {
-        await firstValueFrom(this.productService.saveProduct(this.productForm.value));
-        this.showToastMessage();
-        this.resetForm();
+        this.productService.saveProduct(this.productForm.getRawValue()).subscribe(data => {
+          this.showToastMessage();
+          this.resetForm();
+        });
       } else {
         this.formValidateService.validateAllFormFields(this.productForm);
-        this.checkDuplicate();
+        this.checkDuplicateID();
       }
     } catch (error: any) {
       console.error(error);
@@ -97,13 +96,15 @@ export default class NewProductComponent implements AfterViewInit {
     this.InputId.nativeElement.focus();
   }
   /* check id duplicate */
-  async checkDuplicate() {
+  checkDuplicateID() {
     if (this.id.value) {
-      this.duplicateError = await firstValueFrom(this.productService.getProductsVerification(this.id.value));
-      if (this.duplicateError) {
-        const err: ValidationErrors = { idDuplicate: true };
-        this.id.setErrors(err);
-      }
+      this.productService.getProductsVerification(this.id.value).subscribe((data) => {
+        this.duplicateError = data
+        if (this.duplicateError) {
+          const err: ValidationErrors = { idDuplicate: true };
+          this.id.setErrors(err);
+        }
+      });
     }
   }
 
@@ -113,19 +114,22 @@ export default class NewProductComponent implements AfterViewInit {
   }
   //getters
   get id() {
-    return this.productForm.controls.id as FormControl;
+    return this.productForm.controls['id'] as FormControl;
   }
   get name() {
-    return this.productForm.controls.name as FormControl;
+    return this.productForm.controls['name'] as FormControl;
+  }
+  get logo() {
+    return this.productForm.controls['logo'] as FormControl;
   }
   get description() {
-    return this.productForm.controls.description as FormControl;
+    return this.productForm.controls['description'] as FormControl;
   }
   get date_release() {
-    return this.productForm.controls.date_release as FormControl;
+    return this.productForm.controls['date_release'] as FormControl;
   }
   get date_revision() {
-    return this.productForm.controls.date_revision as FormControl;
+    return this.productForm.controls['date_revision'] as FormControl;
   }
 
 }

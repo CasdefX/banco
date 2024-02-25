@@ -1,8 +1,7 @@
 <section class="products">
     <div class="filter__container">
         <input type="text" class="input" [formControl]="searchText" placeholder="Search Products..." />
-        <button class="btn" routerLink="/product/new" routerLinkActive="active"
-            ariaCurrentWhenActive="page">Agregar</button>
+        <button class="btn" routerLink="/product/new" routerLinkActive="active">Agregar</button>
     </div>
     <div class="table__container">
         <div class="table__responsive">
@@ -21,7 +20,7 @@
                     </tr>
                 </thead>
                 <tbody class="table__body">
-                    @for (item of products |filter:this.searchText.value:page:selectedRows.value; track
+                    @for (item of products |filter:this.searchText.value:minRows:selectedRows.value; track
                     $index) {
                     <tr class="table__body-row">
                         <td class="table__body-col text--center" scope="row">
@@ -29,11 +28,11 @@
                         </td>
                         <td class="table__body-col">{{item.name}}</td>
                         <td class="table__body-col">{{item.description}}</td>
-                        <td class="table__body-col">{{item.date_release|date:'dd/MM/yyyy HH:mm': '-0'}}</td>
-                        <td class="table__body-col">{{item.date_revision|date:'dd/MM/yyyy HH:mm': '-0'}}</td>
+                        <td class="table__body-col">{{item.date_release|date:'dd/MM/yyyy': '-0'}}</td>
+                        <td class="table__body-col">{{item.date_revision|date:'dd/MM/yyyy': '-0'}}</td>
                         <td class="table__body-col">
                             <div class="dropdown" (clickedOutside)="item.isMenuOpen = false">
-                                <button #actions (click)="openActionsMenu(item)" class="dropdown__btn"><i
+                                <button #actions (click)="item.isMenuOpen = !item.isMenuOpen" class="dropdown__btn"><i
                                         class="fa-solid fa-ellipsis-vertical"></i></button>
                                 <div id="actions" #menu *ngIf="item.isMenuOpen" class="dropdown__content">
                                     <a href="javascript:void(0)" [routerLink]="['../edit', item.id]"><i
@@ -56,13 +55,13 @@
                 </p>
             </div>
             <div class="table__pagination">
-                <button class="btn" (click)="preview()" [disabled]="page===0">preview</button>
+                <button class="btn" (click)="preview()" [disabled]="minRows===0">preview</button>
                 <button class="btn" (click)="next()"
-                    [disabled]="(products |filter:this.searchText.value:page:selectedRows.value).length<selectedRows.value">next</button>
+                    [disabled]="(products |filter:this.searchText.value:minRows:selectedRows.value).length<selectedRows.value">next</button>
             </div>
             <div>
                 <select class="table__rows" name="table-rows" id="table-rows" [formControl]="selectedRows"
-                    (ngModelChange)="page=0">
+                    (ngModelChange)="minRows=0">
                     <option *ngFor="let item of rowsTable" [ngValue]="item">
                         {{ item }}
                     </option>

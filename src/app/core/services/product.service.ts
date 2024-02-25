@@ -1,7 +1,7 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProduct } from '../interfaces/product';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { GeneralService } from './general.service';
 
 @Injectable({
@@ -10,30 +10,27 @@ import { GeneralService } from './general.service';
 
 export class ProductService {
   baseUrl = 'https://tribu-ti-staffing-desarrollo-afangwbmcrhucqfh.z01.azurefd.net/ipf-msa-productosfinancieros/bp/products'
-  constructor(private http: HttpClient, private gnrlService: GeneralService) {
+  constructor(private http: HttpClient) {
   }
   /* get all product list */
   getProductsList(): Observable<IProduct[]> {
-    return this.http.get<IProduct[]>(this.baseUrl)
-      .pipe(
-        map((response: any) => {
-          for (const item of response) {
-            item.isMenuOpen = false;
-          }
-          return response
-        })
-      )
+    return this.http.get<IProduct[]>(this.baseUrl).pipe(
+      tap((response: IProduct[]) => {
+
+        return response
+      }), catchError(this.handleError("failed to fetch data"))
+    )
   }
   /* check id duplicate */
   getProductsVerification(id: string): Observable<any> {
-    const options = id ?
-      { params: new HttpParams().set('id', id) } : {};
-    return this.http.get<any>(this.baseUrl + '/verification', options)
+    return this.http.get<any>(this.baseUrl + '/verification', { params: new HttpParams().set('id', id), })
   }
   /* create product record */
   saveProduct(data: any): Observable<IProduct> {
     data.date_revision = data.date_revision.split('/').reverse().join('-')
-    return this.http.post<IProduct>(this.baseUrl, data)
+    return this.http.post<IProduct>(this.baseUrl, data).pipe(
+      catchError(this.handleError("failed to save data"))
+    )
   }
   /* remove product record */
   updateProduct(data: any): Observable<IProduct> {
@@ -42,10 +39,13 @@ export class ProductService {
   }
   /* destroy product record */
   removeProduct(id: string): Observable<string> {
-    return this.http.delete(this.baseUrl, { responseType: 'text', params: new HttpParams().set('id', id), }).pipe(
-      map((response: any) => {
-        return response
-      })
-    )
+    return this.http.delete(this.baseUrl, { responseType: 'text', params: new HttpParams().set('id', id), })
+  }
+
+  private handleError<T>(operation = 'operation') {
+    return (error: HttpErrorResponse): Observable<never> => {
+      const message = `server returned code ${error.status} with body "${error.error}"`
+      throw new Error(`${operation} failed: ${message}`)
+    }
   }
 }
