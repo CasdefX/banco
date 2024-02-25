@@ -1,12 +1,33 @@
 {
   "name": "banco",
   "version": "0.0.0",
+  "jest": {
+    "preset": "jest-preset-angular",
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupJest.ts"
+    ],
+    "testPathIgnorePatterns":[
+      "<rootDir>/node_module/",
+      "<rootDir>/dist/"
+    ],
+    "transform": {
+    "<transform_regex>":[
+      "ts-jest",{
+        "tsConfig": "<rootDir>/tsconfig.spec.json",
+        "stringityContentPathRegex":"\\.html$"
+      }
+    ]
+  }
+  },
+  "module": "es2022",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "private": true,
   "dependencies": {
@@ -26,13 +47,12 @@
     "@angular-devkit/build-angular": "^17.0.7",
     "@angular/cli": "^17.0.7",
     "@angular/compiler-cli": "^17.0.0",
-    "@types/jasmine": "~5.1.0",
-    "jasmine-core": "~5.1.0",
-    "karma": "~6.4.0",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-preset-angular": "^14.0.3",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
     "typescript": "~5.2.2"
   }
 }
