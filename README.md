@@ -2,6 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.7.
 
+test url [https://banco-theta.vercel.app/product/list](https://banco-theta.vercel.app/product/list)
+
 ## Instalacion
 
 Clone repository:
@@ -10,13 +12,11 @@ Clone repository:
 > clone ...
 ```
 
-
 install dependences:
 
 ```
 > npm install 
 ```
-
 
 ## Development server
 
